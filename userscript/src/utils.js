@@ -145,6 +145,11 @@ export function getCodebaseConfig() {
 export function getHarvestConfig() {
     if (typeof GM_getValues === 'function') {
         const values = GM_getValues(['harvest_account_id', 'harvest_access_token', 'harvest_user_agent' ]);
+        Object.entries(values).forEach(([key, value]) => {
+            if (!value) {
+                throw new Error(`Missing configuration value for key ${key}.`);
+            }
+        })
         return {
             account_id: values.harvest_account_id,
             access_token: values.harvest_access_token,
@@ -173,6 +178,9 @@ export function getHarvestConfig() {
 export function getCodebaseHavestMap(codebaseProjectId) {
     if (typeof GM_getValue === 'function') {
         const value = GM_getValue(codebaseProjectId);
+        if (!value) {
+            throw new Error(`No mapping found for codebase project ID: ${codebaseProjectId}`);
+        }
         const searchParams = new URLSearchParams(value);
         return {
             codebase_project_id: codebaseProjectId,
