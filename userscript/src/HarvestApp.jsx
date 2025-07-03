@@ -166,7 +166,7 @@ const SubmitButton = ({ taskId, hours, notes }) => {
     const context = useContext(HarvestContext);
     const codebase = useContext(CodebaseContext);
     let label = 'Save entry';
-    let disabled = 'false';
+    let disabled = false;
 
     const reportTime = (event) => {
         const today = new Date().toISOString().slice(0, 10);
@@ -185,7 +185,7 @@ const SubmitButton = ({ taskId, hours, notes }) => {
         };
 
         label = 'Saving...';
-        disabled = 'true';
+        disabled = true;
         api.addTimeEntry(parameters).then((data) => {
             notify({
                 title: 'Time entry saved',
@@ -194,7 +194,7 @@ const SubmitButton = ({ taskId, hours, notes }) => {
             });
         }).finally(() => {
                 label = 'Save entry';
-                disabled = 'false';
+                disabled = false;
             }
         );
 
@@ -239,7 +239,6 @@ function TimeEntries() {
 const TotalTime = () => {
     const context = useContext(HarvestContext);
     const { data, status, error } = useQuery('TimeEntries', async () => {
-        // @todo Replace with real values.
         return await api.getTimeEntries(context.client_id, context.project_id);
     });
 
