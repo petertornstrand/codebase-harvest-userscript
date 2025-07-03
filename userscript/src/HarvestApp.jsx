@@ -6,7 +6,6 @@ import {HarvestContext} from "./HarvestContext";
 import {CodebaseContext} from "./CodebaseContext";
 import {getCodebaseConfig,getHarvestConfig, notify} from "./utils";
 
-
 // Application global constants.
 const harvest = getHarvestConfig();
 const api = new HarvestAPI(harvest);
@@ -44,10 +43,10 @@ export default function HarvestApp() {
  * @constructor
  */
 function ReportTime() {
-    /** @var {number} taskId - State variable for selected task ID */
-    const [taskId, setTaskId] = useState(0);
+    /** @var {string} taskId - State variable for selected task ID */
+    const [taskId, setTaskId] = useState('');
 
-    /** @var {number|null} hours - State variable for entered hours */
+    /** @var {string|null} hours - State variable for entered hours */
     const [hours, setHours] = useState(null);
 
     /** @var {string} notes - State variable for entered notes */
@@ -97,7 +96,7 @@ function ReportTime() {
                     <li className="Properties__item">
                         <h3 className="Properties__title">Activity</h3>
                         <div className="Properties__input">
-                            <TasksSelect onChange={ handleTaskChange} />
+                            <TasksSelect onChange={ handleTaskChange} setDefaultTask={(val) => setTaskId(val)} />
                         </div>
                     </li>
                     <li className="Properties__item">
@@ -129,10 +128,11 @@ function ReportTime() {
  * TaskSelect element.
  *
  * @param {function} onChange
+ * @param {function} setDefaultTask
  * @return {JSX.Element}
  * @constructor
  */
-const TasksSelect = ( { onChange }) => {
+const TasksSelect = ( { onChange, setDefaultTask } ) => {
     const context = useContext(HarvestContext);
     const { data, status, error } = useQuery('TasksSelect', async () => {
         return await api.getTasks(context.project_id);
@@ -141,9 +141,12 @@ const TasksSelect = ( { onChange }) => {
     if (status === 'loading') return ( <p className="Loading">Loading...</p> );
     if (error) return ( <p className="Error">{error.message}</p> );
 
+    // Set the initial value for the taskId state.
+    setDefaultTask(data.task_assignments[0].task.id);
+
     return (
         <div className="select-input select-input--micro shaded-input">
-            <select className="select-input__element" onChange={ onChange }>
+            <select className="select-input__element" onChange={ onChange } defaultValue={data.task_assignments[0].task.id}>
                 { data.task_assignments.map((task) => {
                     return (
                         <option key={task.task.id} value={task.task.id}>{task.task.name}</option>
