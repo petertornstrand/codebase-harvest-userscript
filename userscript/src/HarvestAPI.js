@@ -146,10 +146,10 @@ export class HarvestAPI {
      * Add time entry.
      *
      * @param {Object}  parameters
-     * @param {string}  parameters.project_id
-     * @param {string}  parameters.task_id
+     * @param {int}     parameters.project_id
+     * @param {int}     parameters.task_id
      * @param {string}  [parameters.spent_date]
-     * @param {string}  [parameters.hours]
+     * @param {float}   [parameters.hours]
      * @param {string}  [parameters.notes]
      * @param {Object}  [parameters.external_reference]
      * @param {string}  parameters.external_reference.id

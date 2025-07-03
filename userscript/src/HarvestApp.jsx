@@ -128,6 +128,7 @@ function ReportTime() {
 /**
  * TaskSelect element.
  *
+ * @param {function} onChange
  * @return {JSX.Element}
  * @constructor
  */
@@ -156,8 +157,8 @@ const TasksSelect = ( { onChange }) => {
 /**
  * SubmitButton element.
  *
- * @param {number} taskId
- * @param {number} hours
+ * @param {string} taskId
+ * @param {string} hours
  * @param {string} notes
  * @return {JSX.Element}
  * @constructor
@@ -171,10 +172,10 @@ const SubmitButton = ({ taskId, hours, notes }) => {
     const reportTime = (event) => {
         const today = new Date().toISOString().slice(0, 10);
         const parameters = {
-            project_id: context.project_id,
-            task_id: taskId,
+            project_id: parseInt(context.project_id),
+            task_id: parseInt(taskId),
             spent_date: today,
-            hours: hours,
+            hours: parseFloat(hours),
             notes: notes,
             external_reference: {
                 id: codebase.id,
